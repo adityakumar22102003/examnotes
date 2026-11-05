@@ -13,6 +13,11 @@ export const getCurrentUser = async (dispatch) => {
         console.log("Status:", error.response?.status);
     }
 }
+export const getServerHealth = async () => {
+    const result = await axios.get(serverUrl + "/health");
+    return result.data;
+}
+
 export const generateNotes = async (payload) => {
     try {
         const result = await axios.post(serverUrl + "/api/notes/generate-notes", payload, { withCredentials: true });

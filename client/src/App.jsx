@@ -20,7 +20,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={userData ? <Home /> : <Navigate to="/auth" replace />} />
+        <Route path="/" element={<Home />} />
         
         <Route path="/auth" element={userData ? <Navigate to="/" replace /> : <Auth />} />
 
