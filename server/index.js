@@ -20,6 +20,13 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser())
 
+app.get("/health", (_req, res) => {
+    res.json({
+        status: "healthy",
+        service: "examnotes-server"
+    });
+});
+
 // app.post("/api/auth",authroutes);    
 
 app.use("/api/auth",authRouter)
