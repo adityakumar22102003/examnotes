@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import { AnimatePresence, motion, scale } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import axios from "axios";
 import logo from "../assets/logo.png"
 import { useDispatch, useSelector } from 'react-redux';
 import { serverUrl } from '../App';
 import { setUserData } from '../redux/userSlice';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
     const {userData} = useSelector((state)=>state.user)
-    const credits = userData.credits;
+    const credits = userData?.credits;
     const [showCredits, setShowCredits] = useState(false)
     const [showProfile, setshowProfile] = useState(false)
     const dispatch = useDispatch()
@@ -40,6 +40,8 @@ const Navbar = () => {
 
 
           <div className='flex items-center gap-6 relative' >
+              {userData ? (
+              <>
               <div className='relative' >
                   <motion.div
                       onClick={() => { setShowCredits(!showCredits);setshowProfile(false) }}
@@ -106,6 +108,15 @@ const Navbar = () => {
 
                   
               </div>
+              </>
+              ) : (
+                  <button
+                      onClick={() => navigate("/auth")}
+                      className='rounded-full bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-gray-200'
+                  >
+                      Sign in
+                  </button>
+              )}
               
 
 

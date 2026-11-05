@@ -1,13 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import img from '../assets/img1.png'
 import { motion } from "motion/react";
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { getServerHealth } from '../services/api';
 
 
 const Home = () => {
   const navigate = useNavigate();
+  const { userData } = useSelector((state) => state.user);
+  const [health, setHealth] = useState(null);
+  const [healthError, setHealthError] = useState(false);
+
+  useEffect(() => {
+    getServerHealth()
+      .then(setHealth)
+      .catch(() => setHealthError(true));
+  }, []);
+
   return (
     <div className='min-h-screen overflow-hidden bg-white text-black'>
       <Navbar />
@@ -50,7 +62,7 @@ const Home = () => {
               scale: 1.07
 
             }}
-            onClick={() => navigate("/notes")}
+            onClick={() => navigate(userData ? "/notes" : "/auth")}
             whileTap={{ scale: 0.97 }}
             className='mt-10 px-10 py-3 rounded-xl flex items-center gap-3 bg-gradient-to-br from-black/90 via-black/80 to-black/90 border border-white/10 text-white font-semibold text-lg shadow-[0_25px_60px_rgba(0,0,0,0.7)]' >
 
@@ -77,6 +89,24 @@ const Home = () => {
 
         </motion.div>
 
+      </section>
+      <section className='max-w-6xl mx-auto px-8 pt-16' aria-label='Server health'>
+        <div className='rounded-2xl border border-black/10 bg-gray-50 p-6'>
+          <h2 className='text-lg font-semibold'>Server health</h2>
+          {health ? (
+            <pre className='mt-3 overflow-x-auto rounded-xl bg-black/90 p-4 text-sm text-green-300'>
+              {JSON.stringify(health, null, 2)}
+            </pre>
+          ) : healthError ? (
+            <p className='mt-3 text-sm text-red-700' role='status'>
+              Server health is currently unavailable.
+            </p>
+          ) : (
+            <p className='mt-3 text-sm text-gray-600' role='status'>
+              Checking server health...
+            </p>
+          )}
+        </div>
       </section>
       {/* bottom */}
       <section className='max-w-6xl mx-auto px-8 py-32 grid grid-cols-1 md:grid-cols-4 gap-10' >
